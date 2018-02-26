@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>The Vigenere Cipher</title>
+</head>
+<body>
+	<style>
+
+	body 
+		{
+			background-image: url(background.png);
+			height: 100vh;
+			background-size: cover;
+			background-position: center;
+			background-repeat: no-repeat;
+			font-family:"Roboto", sans-serif;
+			text-align: center;
+		}
+		h1 
+		{
+			margin-top: 3em;
+			margin-bottom: 2em;
+			color: white;
+			background-color: darkorange;
+		}
+		h2 {
+			font-size: 1em;
+			font-weight: normal;
+		}
+		h3
+		{
+			font size: 1em;
+			font-weight: normal;
+			position: absolute;
+			text-align: center;
+			margin-left: 500px;
+			margin-top: 500px;
+		}
+
+		.arrow 
+		{
+			font-size: 2.0em;
+			font-weight: bold;
+			margin: 0;
+		}
+		.warning 
+		{
+			background-color: orange;
+			padding: 0.4em 0.75em;
+		}
+
+.main-nav5
+{
+	float: right;
+	list-style: none;
+	margin-top: 25px;
+	position: absolute;
+	top: 20px;
+	left: 850px;
+}
+
+.main-nav5 li
+{
+	display: inline-block;
+}
+
+.main-nav5 li a
+{
+	color: white;
+	text-decoration: none;
+	padding: 5px 20px;
+	font-family: "Roboto", sans-serif;
+	font-size: 15px;
+}
+
+.main-nav5 li a:hover
+{
+	border: 1px solid white;
+}
+
+</style>
+
+<script>
+
+	function update() {
+				var direction = document.getElementById('direction').value;
+				//console.log(direction);
+				
+				var isDecrypt = false;
+
+				if (direction == 'Decrypt'){
+					isDecrypt = true;
+				}
+				crypt(isDecrypt);		
+	}
+
+	function crypt(isDecrypt) {
+		if (document.getElementById("key").value.length == 0) {
+			alert("No Key entered");
+			return;
+		}
+		var key = filterKey(document.getElementById("key").value);
+		if (key.length == 0) {
+			alert("Key has no alphabetic characters");
+			return;
+		}
+		if (isDecrypt) {
+			for (var i = 0; i < key.length; i++)
+				key[i] = (26 - key[i]) % 26;
+		}
+		//console.log(key);
+		document.getElementById('output').value = vigenereCipher(document.getElementById("input").value, key);
+
+	}
+
+
+	/* 
+	 * Performs the Vigenère cipher coding on the supplied input and key.
+	 */
+	function vigenereCipher(input, key) {
+		//console.log(input);
+		var output = "";
+		for (var i = 0, j = 0; i < input.length; i++) {
+			var c = input.charCodeAt(i);
+			if (isUppercase(c)) {
+				output += String.fromCharCode((c - 65 + key[j % key.length]) % 26 + 65);
+				j++;
+			} else if (isLowercase(c)) {
+				output += String.fromCharCode((c - 97 + key[j % key.length]) % 26 + 97);
+				j++;
+			} else {
+				output += input.charAt(i);
+			}
+		}
+		//console.log(output);
+		return output;
+	}
+
+
+	/* 
+	 * Returns an array of numbers in the range 0 to  26
+	 */
+	function filterKey(key) {
+		var result = [];
+		for (var i = 0; i < key.length; i++) {
+			var c = key.charCodeAt(i);
+	// Is it a letter (upper or lowercase)
+			if (isUppercase(c) || isLowercase(c))
+				result.push((c - 65) % 32);
+		}
+		return result;
+	}
+
+	// Is character uppercase ?
+	function isUppercase(c) {
+		return 65 <= c && c <= 90;  // 65 is character code for 'A'. 90 is 'Z'.
+	}
+
+	// Is character lowercase ?
+	function isLowercase(c) {
+		return 97 <= c && c <= 122;  // 97 is character code for 'a'. 122 is 'z'.
+	}
+
+</script>
+
+	<div>
+				<ul class="main-nav5">
+			<li class="active"><a href="index.html"> HOME </a></li>
+			<li class="active"><a href="page1.html"> THE CAESAR SHIFT </a></li>
+			<li class="active"><a href="page2.html"> THE VIGENERE CIPHER </a></li>
+		</ul>
+
+		<h1> Vigenere Cipher Exercise </h1>
+<h2> Type something in the Box below </h2>
+<h3> This is the Vigenere Cipher Code of the text above! </h3>
+
+<noscript><p><span class="warning"><em>Please enable JavaScript to use this page.</em></span></p></noscript>
+
+<p><textarea id="input" cols="80" rows="12" onkeyup="update()" onchange="update()" autofocus></textarea></p>
+
+<p> KEY </p>
+
+<p><textarea id="key" cols="20" rows="1" onkeyup="update()" onchange="update()" autofocus></textarea></p>
+
+<p><select id="direction" onchange="update()">
+	<option value="Encrypt">Encrypt</option>
+	<option value="Decrypt">Decrypt</option>
+</select></p>
+
+<p><textarea id="output" cols="80" rows="12" readonly></textarea></p>
+
+</body>
+</html>
